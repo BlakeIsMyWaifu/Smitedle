@@ -1,11 +1,36 @@
-import { Avatar, Container, Table } from '@mantine/core'
+import { Avatar, Badge, Container, Table } from '@mantine/core'
 import { godData } from 'data/gods'
-import { FC, Fragment } from 'react'
+import { type FC, useMemo } from 'react'
 import { useGameStore } from 'state/gameStore'
+
+interface GodInfo {
+	avatar: string;
+	pantheon: string;
+	roles: string;
+	damageType: string;
+	rangeType: string;
+	pros: string;
+}
 
 const GuessesTable: FC = () => {
 
-	const guess = useGameStore(state => state.guesses)
+	const getData = (godName: string): GodInfo => {
+		const data = godData.find(god => god.Name.toLowerCase() === godName.toLowerCase()) ?? godData[0]
+		const [rangeType, damageType] = data.Type.split(', ')
+		return {
+			avatar: data.godIcon_URL,
+			pantheon: data.Pantheon,
+			roles: data.Roles,
+			damageType,
+			rangeType,
+			pros: data.Pros
+		}
+	}
+
+	const guesses = useGameStore(state => state.guesses)
+
+	const correctGod = useGameStore(state => state.correctGod)
+	const correctGodData: GodInfo = useMemo(() => getData(correctGod), [correctGod])
 
 	return (
 		<Container style={{
@@ -25,20 +50,22 @@ const GuessesTable: FC = () => {
 				</thead>
 				<tbody>
 					{
-						guess.map(guess => {
+						guesses.map(guess => {
+							const guessedData = getData(guess)
 
-							const guessData = godData.find(god => god.Name.toLowerCase() === guess)
-							if (!guessData) return <Fragment key={guess} />
+							const colour = (category: keyof GodInfo): string => guessedData[category] === correctGodData[category] ? 'green' : 'red'
 
-							const [rangeType, damageType] = guessData.Type.split(', ')
+							const prosColour = colour('pros') === 'green' ? 'green' : (
+								correctGodData.pros.split(', ').some(pro => guessedData.pros.split(', ').includes(pro)) ? 'orange' : 'red'
+							)
 
 							return <tr key={guess}>
-								<td><Avatar src={guessData.godIcon_URL} /></td>
-								<td>{guessData.Pantheon}</td>
-								<td>{guessData.Roles}</td>
-								<td>{damageType}</td>
-								<td>{rangeType}</td>
-								<td>{guessData.Pros}</td>
+								<td><Avatar src={guessedData.avatar} /></td>
+								<Row colour={colour('pantheon')} value={guessedData.pantheon} />
+								<Row colour={colour('roles')} value={guessedData.roles} />
+								<Row colour={colour('damageType')} value={guessedData.damageType} />
+								<Row colour={colour('rangeType')} value={guessedData.rangeType} />
+								<Row colour={prosColour} value={guessedData.pros} />
 							</tr>
 						})
 					}
@@ -46,6 +73,24 @@ const GuessesTable: FC = () => {
 			</Table>
 		</Container>
 	)
+}
+
+interface RowProps {
+	colour: string;
+	value: string;
+}
+
+const Row: FC<RowProps> = ({ colour, value }) => {
+	return <td>
+		<Badge
+			color={colour}
+			variant='light'
+			size='lg'
+			sx={{
+				textTransform: 'none'
+			}}
+		>{value}</Badge>
+	</td>
 }
 
 export default GuessesTable

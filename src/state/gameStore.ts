@@ -6,20 +6,20 @@ import { devtools } from 'zustand/middleware'
 import { gameActionName } from './createActionName'
 
 interface GameState {
-	god: string;
+	correctGod: string;
 	guesses: string[];
 	startGame: () => void;
 	addGuess: (name: string) => void;
 }
 
 export const useGameStore = create<GameState>()(devtools((set, get) => ({
-	god: '',
+	correctGod: '',
 	guesses: [],
 	startGame: () => {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const randomGod = randomElementFromArray(godData)!
 		set({
-			god: randomGod.Name
+			correctGod: randomGod.Name
 		}, ...gameActionName('startGame'))
 	},
 	addGuess: name => {
