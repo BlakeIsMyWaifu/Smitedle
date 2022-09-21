@@ -25,7 +25,7 @@ export const useGameStore = create<GameState>()(devtools((set, get) => ({
 	addGuess: name => {
 		if (get().guesses.includes(name)) return
 		set(state => ({
-			guesses: [...state.guesses, name]
+			guesses: [name, ...state.guesses]
 		}), ...gameActionName('addGuess'))
 	}
 })))

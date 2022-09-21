@@ -1,4 +1,5 @@
-import { Center } from '@mantine/core'
+import { Container, Stack } from '@mantine/core'
+import GuessesTable from 'components/GuessesTable'
 import Input, { type InputData } from 'components/Input'
 import { godData } from 'data/gods'
 import type { NextPage } from 'next'
@@ -12,18 +13,23 @@ const Home: NextPage = () => {
 	const addGuess = useGameStore(state => state.addGuess)
 
 	return (
-		<Center style={{
-			height: '40vh'
-		}}>
-			<Input
-				label='Guess a God'
-				placeholder='Enter God Name . . .'
-				data={data}
-				onSubmit={value => {
-					addGuess(value)
-				}}
-			/>
-		</Center>
+		<Stack>
+			<Container style={{
+				maxWidth: '50vw',
+				width: '100%'
+			}}>
+				<Input
+					label='Guess a God'
+					placeholder='Enter God Name . . .'
+					data={data}
+					onSubmit={value => {
+						addGuess(value)
+					}}
+				/>
+			</Container>
+
+			<GuessesTable />
+		</Stack>
 	)
 }
 

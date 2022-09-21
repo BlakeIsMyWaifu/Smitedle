@@ -33,6 +33,7 @@ const Input: FC<InputProps> = ({ label, placeholder, data, limit = 6, onSubmit }
 		const inputText = value.toLowerCase()
 		if (!inputText || !data.filter(god => god.value.toLowerCase() === inputText).length) return
 		onSubmit(inputText)
+		setValue('')
 	}
 
 	return <Autocomplete
@@ -43,6 +44,7 @@ const Input: FC<InputProps> = ({ label, placeholder, data, limit = 6, onSubmit }
 		itemComponent={AutoCompleteItem}
 		limit={limit}
 		size='xl'
+		p='xl'
 		transition='pop-top-left'
 		transitionDuration={80}
 		transitionTimingFunction='ease'
