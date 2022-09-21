@@ -1,9 +1,18 @@
 import { MantineProvider } from '@mantine/core'
 import Header from 'components/Header'
+import { useMountEffect } from 'hooks/useMountEffect'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
+import { useGameStore } from 'state/gameStore'
 
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
+
+	const startGame = useGameStore(state => state.startGame)
+
+	useMountEffect(() => {
+		startGame()
+	})
+
 	return (
 		<>
 			<Head>
