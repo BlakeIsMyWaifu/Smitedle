@@ -4,6 +4,7 @@ import { useMountEffect } from 'hooks/useMountEffect'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { useGameStore } from 'state/gameStore'
+import { useSettingsStore } from 'state/settingsStore'
 
 const useStyle = createStyles(theme => ({
 	body: {
@@ -21,6 +22,8 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
 		startGame()
 	})
 
+	const theme = useSettingsStore(state => state.theme)
+
 	return (
 		<>
 			<Head>
@@ -34,7 +37,7 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
 				withGlobalStyles
 				withNormalizeCSS
 				theme={{
-					colorScheme: 'dark'
+					colorScheme: theme
 				}}
 			>
 				<Stack>
