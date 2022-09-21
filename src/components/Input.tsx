@@ -1,6 +1,7 @@
 import { ActionIcon, Autocomplete, Avatar, Group, Text, type AutocompleteItem } from '@mantine/core'
 import { IconArrowRight, IconSearch } from '@tabler/icons'
 import { FC, forwardRef, useState } from 'react'
+import { useGameStore } from 'state/gameStore'
 
 export interface InputData extends AutocompleteItem {
 	icon: string;
@@ -16,7 +17,10 @@ interface InputProps {
 
 const Input: FC<InputProps> = ({ label, placeholder, data, limit = 6, onSubmit }) => {
 
-	const AutoCompleteItem = forwardRef<HTMLDivElement, InputData>(function Test({ value, icon, ...other }: InputData, ref) {
+	const correctGod = useGameStore(state => state.correctGod)
+	const winGame = useGameStore(state => state.winGame)
+
+	const AutoCompleteItem = forwardRef<HTMLDivElement, InputData>(function Item({ value, icon, ...other }: InputData, ref) {
 		return (
 			<div ref={ref} {...other}>
 				<Group noWrap>
@@ -27,13 +31,14 @@ const Input: FC<InputProps> = ({ label, placeholder, data, limit = 6, onSubmit }
 		)
 	})
 
-	const [value, setValue] = useState('')
+	const [inputValue, setInputValue] = useState('')
 
 	const handleSubmit = (): void => {
-		const inputText = value.toLowerCase()
+		const inputText = inputValue.toLowerCase()
 		if (!inputText || !data.filter(god => god.value.toLowerCase() === inputText).length) return
+		if (inputText === correctGod.toLowerCase()) winGame()
 		onSubmit(inputText)
-		setValue('')
+		setInputValue('')
 	}
 
 	return <Autocomplete
@@ -61,8 +66,8 @@ const Input: FC<InputProps> = ({ label, placeholder, data, limit = 6, onSubmit }
 			if (event.key !== 'Enter') return
 			handleSubmit()
 		}}
-		value={value}
-		onChange={setValue}
+		value={inputValue}
+		onChange={setInputValue}
 	/>
 }
 
