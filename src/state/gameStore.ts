@@ -12,8 +12,9 @@ interface GameStore {
 	guesses: string[];
 	gameState: GameState;
 	startGame: () => void;
-	addGuess: (name: string) => void;
 	winGame: () => void;
+	quitGame: () => void;
+	addGuess: (name: string) => void;
 }
 
 export const useGameStore = create<GameStore>()(devtools((set, get) => ({
@@ -29,15 +30,22 @@ export const useGameStore = create<GameStore>()(devtools((set, get) => ({
 			gameState: 'progress'
 		}, ...gameActionName('startGame'))
 	},
+	winGame: () => {
+		set({
+			gameState: 'win'
+		}, ...gameActionName('winGame'))
+	},
+	quitGame: () => {
+		set({
+			correctGod: '',
+			guesses: [],
+			gameState: 'start'
+		}, ...gameActionName('quitGame'))
+	},
 	addGuess: name => {
 		if (get().guesses.includes(name)) return
 		set(state => ({
 			guesses: [name, ...state.guesses]
 		}), ...gameActionName('addGuess'))
-	},
-	winGame: () => {
-		set({
-			gameState: 'win'
-		}, ...gameActionName('winGame'))
 	}
 })))

@@ -1,6 +1,7 @@
-import { ActionIcon, Button, Group, Modal, Stack, Text, Title, useMantineTheme } from '@mantine/core'
+import { ActionIcon, Button, Group, Modal, Stack, Tabs, Text, Title, useMantineTheme } from '@mantine/core'
 import { IconMoonStars, IconRefresh, IconSun } from '@tabler/icons'
-import { FC, useState } from 'react'
+import { useRouter } from 'next/router'
+import { FC, useEffect, useState } from 'react'
 import { useGameStore } from 'state/gameStore'
 import { useSettingsStore } from 'state/settingsStore'
 
@@ -18,6 +19,12 @@ const Header: FC = () => {
 	const gameState = useGameStore(state => state.gameState)
 	const startGame = useGameStore(state => state.startGame)
 
+	const router = useRouter()
+	const [activeTab, setActiveTab] = useState<string | null>('home')
+	useEffect(() => {
+		setActiveTab(router.route as string)
+	}, [router.route])
+
 	return (
 		<Group position='apart' sx={theme => ({
 			paddingTop: theme.spacing.sm,
@@ -26,7 +33,32 @@ const Header: FC = () => {
 			paddingBottom: theme.spacing.sm
 		})}>
 
-			<Title ml='xl'>Smitedle</Title>
+			<Group spacing='xl'>
+				<Title ml='xl'>Smitedle</Title>
+
+				<Tabs
+					variant='pills'
+					value={activeTab}
+					defaultValue='home'
+					onTabChange={value => {
+						setActiveTab(value)
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+						router.push(value!)
+					}}
+					styles={theme => ({
+						tab: {
+							'&:hover': {
+								backgroundColor: theme.colors.blue[9]
+							}
+						}
+					})}
+				>
+					<Tabs.List>
+						<Tabs.Tab value='/'>Home</Tabs.Tab>
+						<Tabs.Tab value='/classic'>Classic</Tabs.Tab>
+					</Tabs.List>
+				</Tabs>
+			</Group>
 
 			<Group pr='md'>
 

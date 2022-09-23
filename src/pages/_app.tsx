@@ -1,26 +1,10 @@
-import { MantineProvider, Stack, createStyles } from '@mantine/core'
+import { MantineProvider, Stack } from '@mantine/core'
 import Header from 'components/Header'
-import { useMountEffect } from 'hooks/useMountEffect'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import { useGameStore } from 'state/gameStore'
 import { useSettingsStore } from 'state/settingsStore'
 
-const useStyle = createStyles(theme => ({
-	body: {
-		padding: theme.spacing.xl
-	}
-}))
-
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
-
-	const { classes } = useStyle()
-
-	const startGame = useGameStore(state => state.startGame)
-
-	useMountEffect(() => {
-		startGame()
-	})
 
 	const theme = useSettingsStore(state => state.theme)
 
@@ -42,9 +26,7 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
 			>
 				<Stack>
 					<Header />
-					<div className={classes.body}>
-						<Component {...pageProps} />
-					</div>
+					<Component {...pageProps} />
 				</Stack>
 			</MantineProvider>
 		</>

@@ -1,9 +1,10 @@
 import { Avatar, Group, Select, type SelectItem, Text } from '@mantine/core'
 import { IconChevronDown, IconSearch } from '@tabler/icons'
-import { FC, forwardRef, useRef } from 'react'
+import { godData } from 'data/gods'
+import { FC, forwardRef, useMemo, useRef } from 'react'
 import { useGameStore } from 'state/gameStore'
 
-export interface InputData extends SelectItem {
+interface InputData extends SelectItem {
 	icon: string;
 	label: string;
 }
@@ -11,13 +12,14 @@ export interface InputData extends SelectItem {
 interface InputProps {
 	label: string;
 	placeholder: string;
-	data: InputData[];
-	onSubmit: (value: string) => void;
 }
 
-const Input: FC<InputProps> = ({ label, placeholder, data, onSubmit }) => {
+const Input: FC<InputProps> = ({ label, placeholder }) => {
+
+	const data: InputData[] = useMemo(() => godData.map(god => ({ value: god.Name, label: god.Name, icon: god.godIcon_URL })), [])
 
 	const correctGod = useGameStore(state => state.correctGod)
+	const addGuess = useGameStore(state => state.addGuess)
 	const winGame = useGameStore(state => state.winGame)
 
 	const AutoCompleteItem = forwardRef<HTMLDivElement, InputData>(function Item({ value, icon, ...other }: InputData, ref) {
@@ -37,7 +39,7 @@ const Input: FC<InputProps> = ({ label, placeholder, data, onSubmit }) => {
 		const inputText = text?.toLowerCase()
 		if (!inputText || !data.filter(god => god.value.toLowerCase() === inputText).length) return
 		if (inputText === correctGod.toLowerCase()) winGame()
-		onSubmit(inputText)
+		addGuess(inputText)
 	}
 
 	return <Select
