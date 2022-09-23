@@ -1,7 +1,6 @@
-import { Container, Image, Stack } from '@mantine/core'
+import { Image, Stack } from '@mantine/core'
 import GodInput from 'components/GodInput'
 import GuessGods from 'components/GuessGods'
-import WinBanner from 'components/WinBanner'
 import { useStartGame } from 'hooks/useStartGame'
 import type { NextPage } from 'next'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -73,20 +72,10 @@ const Splash: NextPage = () => {
 					</div>
 			}
 
-			<Container style={{
-				maxWidth: '50vw',
-				width: '100%',
-				height: '20vh'
-			}}>
-				{
-					gameState === 'win'
-						? <WinBanner />
-						: <GodInput
-							label='Guess a Gods from the zoomed in splash art'
-							placeholder='Enter God Name . . .'
-						/>
-				}
-			</Container>
+			<GodInput
+				label='Guess a Gods from the zoomed in splash art'
+				placeholder='Enter God Name . . .'
+			/>
 
 			<GuessGods />
 		</Stack>

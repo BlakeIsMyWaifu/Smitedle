@@ -1,4 +1,5 @@
-import { Avatar, Badge, Container, Table } from '@mantine/core'
+import { Avatar, Badge, Container, ScrollArea, Table } from '@mantine/core'
+import { useMediaQuery } from '@mantine/hooks'
 import { godData } from 'data/gods'
 import { type FC, useMemo } from 'react'
 import { useGameStore } from 'state/gameStore'
@@ -32,45 +33,49 @@ const GuessesTable: FC = () => {
 	const correctGod = useGameStore(state => state.correctGod)
 	const correctGodData: GodInfo = useMemo(() => getData(correctGod), [correctGod])
 
+	const isLargeScreen = useMediaQuery('(min-width: 768px)')
+
 	return (
 		<Container sx={{
-			maxWidth: '80vw',
+			maxWidth: '1500px',
 			width: '100%'
 		}}>
-			<Table>
-				<thead>
-					<tr>
-						<th>God</th>
-						<th>Pantheon</th>
-						<th>Role</th>
-						<th>Damage Type</th>
-						<th>Range Type</th>
-						<th>Pros</th>
-					</tr>
-				</thead>
-				<tbody>
-					{
-						guesses.map(guess => {
-							const guessedData = getData(guess)
+			<ScrollArea>
+				<Table fontSize={isLargeScreen ? 'md' : 'xs'} horizontalSpacing={isLargeScreen ? 'md' : 'xs'}>
+					<thead>
+						<tr>
+							<th>God</th>
+							<th>Pantheon</th>
+							<th>Role</th>
+							<th>Damage Type</th>
+							<th>Range Type</th>
+							<th>Pros</th>
+						</tr>
+					</thead>
+					<tbody>
+						{
+							guesses.map(guess => {
+								const guessedData = getData(guess)
 
-							const colour = (category: keyof GodInfo): string => guessedData[category] === correctGodData[category] ? 'green' : 'red'
+								const colour = (category: keyof GodInfo): string => guessedData[category] === correctGodData[category] ? 'green' : 'red'
 
-							const prosColour = colour('pros') === 'green' ? 'green' : (
-								correctGodData.pros.split(', ').some(pro => guessedData.pros.split(', ').includes(pro)) ? 'orange' : 'red'
-							)
+								const prosColour = colour('pros') === 'green' ? 'green' : (
+									correctGodData.pros.split(', ').some(pro => guessedData.pros.split(', ').includes(pro)) ? 'orange' : 'red'
+								)
 
-							return <tr key={guess}>
-								<td><Avatar src={guessedData.avatar} /></td>
-								<Row colour={colour('pantheon')} value={guessedData.pantheon} />
-								<Row colour={colour('roles')} value={guessedData.roles} />
-								<Row colour={colour('damageType')} value={guessedData.damageType} />
-								<Row colour={colour('rangeType')} value={guessedData.rangeType} />
-								<Row colour={prosColour} value={guessedData.pros} />
-							</tr>
-						})
-					}
-				</tbody>
-			</Table>
+								return <tr key={guess}>
+									<td><Avatar src={guessedData.avatar} /></td>
+									<Row colour={colour('pantheon')} value={guessedData.pantheon} />
+									<Row colour={colour('roles')} value={guessedData.roles} />
+									<Row colour={colour('damageType')} value={guessedData.damageType} />
+									<Row colour={colour('rangeType')} value={guessedData.rangeType} />
+									<Row colour={prosColour} value={guessedData.pros} />
+								</tr>
+							})
+						}
+					</tbody>
+				</Table>
+			</ScrollArea>
 		</Container>
 	)
 }
@@ -81,10 +86,13 @@ interface RowProps {
 }
 
 const Row: FC<RowProps> = ({ colour, value }) => {
+
+	const isLargeScreen = useMediaQuery('(min-width: 768px)')
+
 	return <td>
 		<Badge
 			color={colour}
-			size='lg'
+			size={isLargeScreen ? 'lg' : 'xs'}
 			sx={{
 				textTransform: 'none'
 			}}
