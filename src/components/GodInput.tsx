@@ -14,7 +14,7 @@ interface InputProps {
 	placeholder: string;
 }
 
-const Input: FC<InputProps> = ({ label, placeholder }) => {
+const GodInput: FC<InputProps> = ({ label, placeholder }) => {
 
 	const data: InputData[] = useMemo(() => godData.map(god => ({ value: god.Name, label: god.Name, icon: god.godIcon_URL })), [])
 
@@ -70,4 +70,4 @@ const Input: FC<InputProps> = ({ label, placeholder }) => {
 	/>
 }
 
-export default Input
+export default GodInput

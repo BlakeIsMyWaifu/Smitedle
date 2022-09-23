@@ -1,4 +1,4 @@
-interface God {
+export interface God {
 	Ability1: string;
 	Ability2: string;
 	Ability3: string;

@@ -11,7 +11,7 @@ const WinBanner: FC = () => {
 		<Center>
 			<Stack>
 				<Center>
-					<Title>You won in {guesses} moves</Title>
+					<Title>You won in {guesses} {guesses - 1 ? 'guesses' : 'guess'}</Title>
 				</Center>
 				<Button
 					variant='light'

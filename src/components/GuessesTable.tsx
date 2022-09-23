@@ -33,7 +33,7 @@ const GuessesTable: FC = () => {
 	const correctGodData: GodInfo = useMemo(() => getData(correctGod), [correctGod])
 
 	return (
-		<Container style={{
+		<Container sx={{
 			maxWidth: '80vw',
 			width: '100%'
 		}}>
@@ -84,7 +84,6 @@ const Row: FC<RowProps> = ({ colour, value }) => {
 	return <td>
 		<Badge
 			color={colour}
-			variant='light'
 			size='lg'
 			sx={{
 				textTransform: 'none'

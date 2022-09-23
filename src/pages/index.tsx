@@ -24,6 +24,9 @@ const Home: NextPage = () => {
 				<Link href='/classic' passHref>
 					<Button component='a'>Play Classic</Button>
 				</Link>
+				<Link href='/ability' passHref>
+					<Button component='a'>Play Ability</Button>
+				</Link>
 			</Stack>
 		</Center>
 	)
