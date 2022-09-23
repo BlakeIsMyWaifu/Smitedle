@@ -22,10 +22,13 @@ const Home: NextPage = () => {
 				<Space h={120} />
 
 				<Link href='/classic' passHref>
-					<Button component='a'>Play Classic</Button>
+					<Button component='a' fullWidth>Play Classic</Button>
 				</Link>
 				<Link href='/ability' passHref>
-					<Button component='a'>Play Ability</Button>
+					<Button component='a' fullWidth>Play Ability</Button>
+				</Link>
+				<Link href='/splash' passHref>
+					<Button component='a' fullWidth>Play Splash</Button>
 				</Link>
 			</Stack>
 		</Center>

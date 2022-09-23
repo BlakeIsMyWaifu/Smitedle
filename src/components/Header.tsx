@@ -57,6 +57,7 @@ const Header: FC = () => {
 						<Tabs.Tab value='/'>Home</Tabs.Tab>
 						<Tabs.Tab value='/classic'>Classic</Tabs.Tab>
 						<Tabs.Tab value='/ability'>Ability</Tabs.Tab>
+						<Tabs.Tab value='/splash'>Splash</Tabs.Tab>
 					</Tabs.List>
 				</Tabs>
 			</Group>
