@@ -9,7 +9,7 @@ import { useGameStore } from 'state/gameStore'
 
 const Home: NextPage = () => {
 
-	const data: InputData[] = useMemo(() => godData.map(god => ({ value: god.Name, icon: god.godIcon_URL })), [])
+	const data: InputData[] = useMemo(() => godData.map(god => ({ value: god.Name, label: god.Name, icon: god.godIcon_URL })), [])
 
 	const addGuess = useGameStore(state => state.addGuess)
 	const gameState = useGameStore(state => state.gameState)

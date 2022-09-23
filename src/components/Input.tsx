@@ -1,21 +1,21 @@
-import { ActionIcon, Autocomplete, Avatar, Group, Text, type AutocompleteItem } from '@mantine/core'
-import { IconArrowRight, IconSearch } from '@tabler/icons'
-import { FC, forwardRef, useState } from 'react'
+import { Avatar, Group, Select, type SelectItem, Text } from '@mantine/core'
+import { IconChevronDown, IconSearch } from '@tabler/icons'
+import { FC, forwardRef, useRef } from 'react'
 import { useGameStore } from 'state/gameStore'
 
-export interface InputData extends AutocompleteItem {
+export interface InputData extends SelectItem {
 	icon: string;
+	label: string;
 }
 
 interface InputProps {
 	label: string;
 	placeholder: string;
 	data: InputData[];
-	limit?: number;
 	onSubmit: (value: string) => void;
 }
 
-const Input: FC<InputProps> = ({ label, placeholder, data, limit = 6, onSubmit }) => {
+const Input: FC<InputProps> = ({ label, placeholder, data, onSubmit }) => {
 
 	const correctGod = useGameStore(state => state.correctGod)
 	const winGame = useGameStore(state => state.winGame)
@@ -31,43 +31,40 @@ const Input: FC<InputProps> = ({ label, placeholder, data, limit = 6, onSubmit }
 		)
 	})
 
-	const [inputValue, setInputValue] = useState('')
+	const selectRef = useRef<HTMLInputElement>(null)
 
-	const handleSubmit = (): void => {
-		const inputText = inputValue.toLowerCase()
+	const handleSubmit = (text: string | null): void => {
+		const inputText = text?.toLowerCase()
 		if (!inputText || !data.filter(god => god.value.toLowerCase() === inputText).length) return
 		if (inputText === correctGod.toLowerCase()) winGame()
 		onSubmit(inputText)
-		setInputValue('')
 	}
 
-	return <Autocomplete
+	return <Select
+		allowDeselect
+		searchable
+		ref={selectRef}
 		label={label}
 		placeholder={placeholder}
 		icon={<IconSearch />}
 		data={data}
 		itemComponent={AutoCompleteItem}
-		limit={limit}
 		size='xl'
 		p='xl'
 		transition='pop-top-left'
 		transitionDuration={80}
 		transitionTimingFunction='ease'
-		rightSection={
-			<ActionIcon
-				size={32}
-				onMouseDown={handleSubmit}
-			>
-				<IconArrowRight size={32} stroke={1.5} />
-			</ActionIcon>
-		}
-		rightSectionWidth={48}
+		maxDropdownHeight={600}
 		onKeyDown={event => {
 			if (event.key !== 'Enter') return
-			handleSubmit()
+			handleSubmit((event.target as HTMLInputElement).value);
+			(event.target as HTMLInputElement).value = ''
 		}}
-		value={inputValue}
-		onChange={setInputValue}
+		onChange={handleSubmit}
+		value=''
+		rightSection={<IconChevronDown size={32} stroke={1.5} />}
+		rightSectionWidth={48}
+		styles={{ rightSection: { pointerEvents: 'none' } }}
 	/>
 }
 
